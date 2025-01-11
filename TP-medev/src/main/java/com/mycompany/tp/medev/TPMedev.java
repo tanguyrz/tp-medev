@@ -11,6 +11,6 @@ package com.mycompany.tp.medev;
 public class TPMedev {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        System.out.println("Hello Worlzd!");
     }
 }
