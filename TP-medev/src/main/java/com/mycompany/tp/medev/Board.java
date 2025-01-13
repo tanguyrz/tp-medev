@@ -15,14 +15,17 @@ public class Board {
     private Joueur playerWhite;
     private Joueur currentPlayer;
     
-    private Color color ;
+    private Color color = new Color(true) ;
     
     /**
      * Constructeur par défaut du plateau.
      */
     public Board(){
-        this.playerBlack = new Joueur();
-        this.playerWhite = new Joueur();
+        Color w = new Color(true);
+        Color b = new Color(false);
+        
+        this.playerBlack = new Joueur(b);
+        this.playerWhite = new Joueur(w);
         this.currentPlayer = playerBlack;
         grid = new Cell[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++) {
@@ -102,10 +105,18 @@ public class Board {
             for (int j = 0; j < SIZE; j++) {
                 Color c = grid[i][j].getContent();
                 char symbol = 0;
-                if (color.isWhite()==false){
+                
+                if (color.isWhite()==null){
+                    symbol = 'o';
+                    break;
+                }
+                
+                else if (color.isWhite()==false){
                     symbol = 'N';
                     break;
                 }
+
+                
                 else if (color.isWhite() == true){
                     symbol = 'B';
                     break;

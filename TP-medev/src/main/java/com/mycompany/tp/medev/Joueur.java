@@ -18,6 +18,15 @@ public class Joueur {
     }
     
     /**
+     * Constructeur avec couleur en entrée
+     * @param c la couleur que l'on veut donner au joueur
+     */
+    public Joueur(Color c){
+        this.name = "Jack";
+        this.color = c;
+    }
+    
+    /**
      * Constructeur.
      * @param name  nom du joueur
      * @param color couleur du joueur (BLACK ou WHITE)

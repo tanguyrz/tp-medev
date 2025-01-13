@@ -27,7 +27,7 @@ public class Color {
     * Constructeur
     * @param isWhite : boolean renvoit true si la couleur doit être blanche
     */
-    public Color(boolean isWhite) {
+    public Color(Boolean isWhite) {
         this.isWhite = isWhite;
     }
 
@@ -40,12 +40,12 @@ public class Color {
     }
 
     // Getter pour isWhite
-    public boolean isWhite() {
+    public Boolean isWhite() {
         return isWhite;
     }
 
     // Setter pour isWhite
-    public void setWhite(boolean isWhite) {
+    public void setWhite(Boolean isWhite) {
         this.isWhite = isWhite;
     }
 }
