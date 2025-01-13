@@ -281,35 +281,75 @@ public class Board {
         }
         return true;
     }
-
+    
+    /**
+     * Getter de la taille du plateau
+     * @return la taille du plateau
+     */
+    
     public static int getSIZE() {
         return SIZE;
     }
-
+    
+    /**
+     * Getter de la grille
+     * @return la grille
+     */
+    
     public Cell[][] getGrid() {
         return grid;
     }
-
+    
+    /**
+     * Getter du joueur noir
+     * @return le joueur noir
+     */
+    
     public Joueur getPlayerBlack() {
         return playerBlack;
     }
-
+    
+    /**
+     * Getter du joueur blanc
+     * @return le joueur noir
+     */
+    
     public Joueur getPlayerWhite() {
         return playerWhite;
     }
-
+    
+    /**
+     * Setter de la grille
+     * @param grid la grille de jeu
+     */
+    
     public void setGrid(Cell[][] grid) {
         this.grid = grid;
     }
-
+    
+     /**
+     * Setter du joueur noir
+     * @param playerBlack le joueur noir
+     */
+    
     public void setPlayerBlack(Joueur playerBlack) {
         this.playerBlack = playerBlack;
     }
 
+     /**
+     * Setter du joueur blanc
+     * @param playerWhite le joueur noir
+     */
+    
     public void setPlayerWhite(Joueur playerWhite) {
         this.playerWhite = playerWhite;
     }
 
+     /**
+     * Setter du joueur courant
+     * @param currentPlayer le joueur courant
+     */
+    
     public void setCurrentPlayer(Joueur currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
