@@ -1,2 +1,4 @@
 # tp-medev
-Repo for TP MEDEV
+Binôme Paul Mauny et Tanguy Rozan
+Repo : https://github.com/tanguyrz/tp-medev
+
