@@ -1,13 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.tp.medev;
 
 /**
- *
- * @author paulmauny
+ * Représente la couleur d'un pion ou l'absence de pion.
  */
-public class Color {
-    
+public enum Color {
+    EMPTY, // case vide
+    BLACK,
+    WHITE
 }
