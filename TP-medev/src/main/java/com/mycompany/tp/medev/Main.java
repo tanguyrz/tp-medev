@@ -13,15 +13,15 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("=== Jeu d'Othello en console ===");
 
-        Joueur playerBlack = new Joueur("Joueur Noir", Color.BLACK);
-        Joueur playerWhite = new Joueur("Joueur Blanc", Color.WHITE);
+        Joueur playerBlack = new Joueur("Joueur Noir", new Color(false));
+        Joueur playerWhite = new Joueur("Joueur Blanc", new Color(true));
         Board board = new Board(playerBlack, playerWhite);
 
         while (!board.isGameOver()) {
             board.printBoard();
             Joueur current = board.getCurrentPlayer();
             System.out.println("C'est le tour de " + current.getName() 
-                    + " (" + (current.getColor() == Color.BLACK ? "Noir" : "Blanc") + ")");
+                    + " (" + current.getColor() + ")");
 
             List<Move> validMoves = board.getValidMoves(current);
             if (validMoves.isEmpty()) {
@@ -49,8 +49,8 @@ public class Main {
 
         // Fin de partie
         board.printBoard();
-        int blackCount = board.countPions(Color.BLACK);
-        int whiteCount = board.countPions(Color.WHITE);
+        int blackCount = board.countPions(new Color(false));
+        int whiteCount = board.countPions(new Color(true));
         System.out.println("Partie terminée !");
         System.out.println("Noirs : " + blackCount + " | Blancs : " + whiteCount);
 
