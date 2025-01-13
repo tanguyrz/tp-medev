@@ -15,18 +15,19 @@ public class Board {
     private Joueur playerWhite;
     private Joueur currentPlayer;
     
-    private Color color = new Color(true) ;
-    
     /**
      * Constructeur par défaut du plateau.
+     * Initialise 3 pions "noirs" et 1 pion "blanc" au centre,
+     * de manière à avoir (au moins) un coup valide pour Noir.
      */
     public Board(){
-        Color w = new Color(true);
-        Color b = new Color(false);
+        Color w = new Color(true);   // Blanc
+        Color b = new Color(false);  // Noir
         
         this.playerBlack = new Joueur(b);
         this.playerWhite = new Joueur(w);
-        this.currentPlayer = playerBlack;
+        this.currentPlayer = playerBlack;  // Noir commence
+
         grid = new Cell[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -37,7 +38,7 @@ public class Board {
     }
     
     /**
-     * Constructeur du plateau.
+     * Constructeur du plateau (paramétré).
      *
      * @param playerBlack joueur noir
      * @param playerWhite joueur blanc
@@ -58,41 +59,56 @@ public class Board {
     
     /**
      * Constructeur de copie du plateau.
+     * Copie également le contenu de la grille.
      *
-     * @param b un plateau b
+     * @param b le plateau à copier
      */
-    
     public Board(Board b){
-        this.playerBlack = b.playerBlack;
-        this.playerWhite = b.playerWhite;
-        this.currentPlayer = b.playerBlack; // Noir commence
+        this.playerBlack = new Joueur(b.playerBlack);   // copie Joueur noir
+        this.playerWhite = new Joueur(b.playerWhite);   // copie Joueur blanc
+        // On copie aussi le "currentPlayer" sans le forcer à playerBlack
+        this.currentPlayer = (b.currentPlayer == b.playerBlack) 
+                             ? this.playerBlack 
+                             : this.playerWhite;
+        
         grid = new Cell[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
+                // Copie de la Cell
                 grid[i][j] = new Cell();
+                Color originalColor = b.grid[i][j].getContent();
+                if (originalColor != null) {
+                    // Copie par valeur : new Color(originalColor)
+                    grid[i][j].setContent(new Color(originalColor));
+                }
             }
         }
-        initBoard();
     }
 
     /**
-     * Initialise le plateau avec les 4 pions centraux.
+     * Initialise le plateau avec 3 pions noirs et 1 pion blanc au centre,
+     * de sorte qu'il y ait (au moins) un coup possible pour Noir.
+     * 
+     * On va placer les pions comme suit (indices 0-based) :
+     *   (3,3) = Noir
+     *   (3,4) = Blanc
+     *   (4,3) = Noir
+     *   (4,4) = Noir
+     *
+     * Ainsi, si Noir place un pion en (3,5), il devrait capturer le pion blanc en (3,4).
      */
     private void initBoard() {
-        // Positions de départ : e4, d5 pour Noir (en indices => d4 => (3,3), e4 => (3,4), etc.)
-        // Indice 3,4 correspond au 4ème rang (row=3), 5ème colonne (col=4)...
-        // On s'aligne sur la convention (0-based) :
+        Color noir  = new Color(false);
+        Color blanc = new Color(true);
         
-        // D4 (row=3, col=3) => Blanc
-        Color c1 = new Color(false);
-        Color c2 = new Color(true);
-        grid[3][3].setContent(c1);
-        // E4 (row=3, col=4) => Noir
-        grid[3][4].setContent(c1); 
-        // D5 (row=4, col=3) => Noir
-        grid[4][3].setContent(c1);
-        // E5 (row=4, col=4) => Blanc
-        grid[4][4].setContent(c2);
+        // (3,3) = Noir
+        grid[3][3].setContent(noir);
+        // (3,4) = Blanc
+        grid[3][4].setContent(blanc);
+        // (4,3) = Noir
+        grid[4][3].setContent(noir);
+        // (4,4) = Noir
+        grid[4][4].setContent(noir);
     }
 
     /**
@@ -104,22 +120,17 @@ public class Board {
             System.out.print((i+1) + " ");
             for (int j = 0; j < SIZE; j++) {
                 Color c = grid[i][j].getContent();
-                char symbol = 0;
+                char symbol;
                 
-                if (color.isWhite()==null){
-                    symbol = 'o';
-                    break;
-                }
-                
-                else if (color.isWhite()==false){
-                    symbol = 'N';
-                    break;
-                }
-
-                
-                else if (color.isWhite() == true){
+                if (c == null) {
+                    // Case vide
+                    symbol = '.';
+                } else if (c.isWhite()) {
+                    // Blanc
                     symbol = 'B';
-                    break;
+                } else {
+                    // Noir
+                    symbol = 'N';
                 }
                 
                 System.out.print(" " + symbol + " ");
@@ -149,21 +160,28 @@ public class Board {
     }
 
     /**
-     * Vérifie qu'un coup est valide (case vide + capture au moins un pion).
+     * Vérifie qu'un coup est valide : 
+     * - la case doit être vide 
+     * - et le coup doit capturer au moins un pion adverse.
+     * 
      * @param move le mouvement du pion
-     * @return si le mouvement du pion est valide ou non
+     * @return true si le coup est valide, false sinon
      */
     public boolean isValidMove(Move move) {
         int row = move.getRow();
         int col = move.getCol();
-        if (!isInBounds(row, col) || grid[row][col].getContent() != null) {
+        
+        if (!isInBounds(row, col)) {
             return false;
         }
-        // Vérifier si le coup capture au moins un pion
-        if (getCapturedPions(move).isEmpty()) {
+        // La case doit être vide
+        if (grid[row][col].getContent() != null) {
             return false;
         }
-        return true;
+        
+        // Vérifier si on capture au moins un pion
+        List<int[]> captured = getCapturedPions(move);
+        return !captured.isEmpty();
     }
 
     /**
@@ -174,10 +192,11 @@ public class Board {
     public void placeMove(Move move) {
         List<int[]> captured = getCapturedPions(move);
         // Mettre le pion du joueur sur la case
-        grid[move.getRow()][move.getCol()].setContent(move.getPlayer().getColor());
+        Color myColor = move.getPlayer().getColor();
+        grid[move.getRow()][move.getCol()].setContent(new Color(myColor)); 
         // Retourner les pions adverses capturés
         for (int[] pos : captured) {
-            grid[pos[0]][pos[1]].setContent(move.getPlayer().getColor());
+            grid[pos[0]][pos[1]].setContent(new Color(myColor));
         }
     }
 
@@ -202,21 +221,31 @@ public class Board {
 
     /**
      * Vérifie dans une direction donnée si on capture des pions adverses.
+     * On avance tant qu'on voit des pions de la couleur adverse, puis si on
+     * tombe sur un pion de la même couleur que le joueur, on capture tout 
+     * ce qu'on a traversé.
      */
     private List<int[]> checkDirection(Move move, int dr, int dc) {
         List<int[]> lineCaptures = new ArrayList<>();
         Color myColor = move.getPlayer().getColor();
+        
         int row = move.getRow() + dr;
         int col = move.getCol() + dc;
-        // Avancer tant qu'on est dans les limites et qu'on trouve des pions adverses
-        while (isInBounds(row, col) && grid[row][col].getContent() != null 
-                && grid[row][col].getContent() != myColor) {
+        
+        // On avance tant qu'on est dans les limites, 
+        // qu'il y a un pion et que c'est la couleur adverse
+        while (isInBounds(row, col) 
+               && grid[row][col].getContent() != null
+               && grid[row][col].getContent().isWhite() != myColor.isWhite()) {
             lineCaptures.add(new int[] {row, col});
             row += dr;
             col += dc;
         }
+        
         // Vérifier si on finit sur un pion de la même couleur
-        if (isInBounds(row, col) && grid[row][col].getContent() == myColor) {
+        if (isInBounds(row, col) 
+            && grid[row][col].getContent() != null
+            && grid[row][col].getContent().isWhite() == myColor.isWhite()) {
             // On capture la ligne
             return lineCaptures;
         } else {
@@ -254,6 +283,7 @@ public class Board {
 
     /**
      * Retourne le nombre de pions pour une couleur donnée.
+     * Compare par la valeur (isWhite), pour éviter les problèmes de référence.
      *
      * @param color couleur recherchée
      * @return nombre de pions
@@ -262,7 +292,9 @@ public class Board {
         int count = 0;
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                if (grid[i][j].getContent() == color) {
+                Color cellColor = grid[i][j].getContent();
+                // Comparer la "valeur" (isWhite) plutôt que la référence
+                if (cellColor != null && cellColor.isWhite() == color.isWhite()) {
                     count++;
                 }
             }
@@ -271,7 +303,8 @@ public class Board {
     }
 
     /**
-     * Vérifie si le plateau est plein ou si plus aucun coup n'est possible pour personne.
+     * Vérifie si le plateau est plein ou si plus aucun coup n'est possible 
+     * pour personne => alors la partie est finie.
      *
      * @return vrai si la partie est terminée
      */
@@ -287,88 +320,64 @@ public class Board {
             }
             if (hasEmpty) break;
         }
+        // Si plus de case vide, c'est forcément terminé
         if (!hasEmpty) {
             return true;
         }
 
-        // Vérifier s'il y a au moins un coup valide pour un des deux joueurs
-        if (!getValidMoves(playerBlack).isEmpty() || !getValidMoves(playerWhite).isEmpty()) {
+        // Vérifier s'il y a au moins un coup valide pour Noir ou Blanc
+        List<Move> movesBlack = getValidMoves(playerBlack);
+        List<Move> movesWhite = getValidMoves(playerWhite);
+        if (!movesBlack.isEmpty() || !movesWhite.isEmpty()) {
             return false;
         }
+        // Plus de coup pour personne
         return true;
     }
     
+    // --- GETTERS / SETTERS / DIVERS ---
+
     /**
-     * Getter de la taille du plateau
-     * @return la taille du plateau
+     * @return la taille du plateau (8)
      */
-    
     public static int getSIZE() {
         return SIZE;
     }
     
     /**
-     * Getter de la grille
-     * @return la grille
+     * @return la grille (Cell[][])
      */
-    
     public Cell[][] getGrid() {
         return grid;
     }
     
     /**
-     * Getter du joueur noir
      * @return le joueur noir
      */
-    
     public Joueur getPlayerBlack() {
         return playerBlack;
     }
     
     /**
-     * Getter du joueur blanc
-     * @return le joueur noir
+     * @return le joueur blanc
      */
-    
     public Joueur getPlayerWhite() {
         return playerWhite;
     }
-    
-    /**
-     * Setter de la grille
-     * @param grid la grille de jeu
-     */
     
     public void setGrid(Cell[][] grid) {
         this.grid = grid;
     }
     
-     /**
-     * Setter du joueur noir
-     * @param playerBlack le joueur noir
-     */
-    
     public void setPlayerBlack(Joueur playerBlack) {
         this.playerBlack = playerBlack;
     }
 
-     /**
-     * Setter du joueur blanc
-     * @param playerWhite le joueur noir
-     */
-    
     public void setPlayerWhite(Joueur playerWhite) {
         this.playerWhite = playerWhite;
     }
 
-     /**
-     * Setter du joueur courant
-     * @param currentPlayer le joueur courant
-     */
-    
     public void setCurrentPlayer(Joueur currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
-    
-    
 }
