@@ -13,22 +13,12 @@ public class Joueur {
      * Constructeur par defaut
      */
     public Joueur(){
-        
         this.name="Jack";
-
-        Random random = new Random();
-        int chance = random.nextInt(2);
-        if (chance == 0) {
-            this.color = "Blanche";
-        } 
-        else {
-            this.color = "Noir";
-        }
+        this.color=new Color();
     }
     
     /**
      * Constructeur.
-     *
      * @param name  nom du joueur
      * @param color couleur du joueur (BLACK ou WHITE)
      */
@@ -36,7 +26,16 @@ public class Joueur {
         this.name = name;
         this.color = color;
     }
-
+    
+    /**
+     * Constructeur de copie
+     * @param joueur 
+     */
+    public Joueur(Joueur joueur){
+        this.name=joueur.getName();
+        this.color=joueur.getColor();
+    }
+    
     /**
      * Getter du nom du joueur.
      *
@@ -53,6 +52,14 @@ public class Joueur {
      */
     public Color getColor() {
         return color;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
 
