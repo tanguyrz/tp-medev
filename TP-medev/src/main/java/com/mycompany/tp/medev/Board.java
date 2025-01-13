@@ -14,7 +14,23 @@ public class Board {
     private Joueur playerBlack;
     private Joueur playerWhite;
     private Joueur currentPlayer;
-
+    
+    /**
+     * Constructeur par défaut du plateau.
+     */
+    public Board(){
+        this.playerBlack = new Joueur();
+        this.playerWhite = new Joueur();
+        this.currentPlayer = playerBlack;
+        grid = new Cell[SIZE][SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                grid[i][j] = new Cell(Color.EMPTY);
+            }
+        }
+        initBoard();
+    }
+    
     /**
      * Constructeur du plateau.
      *
@@ -26,6 +42,25 @@ public class Board {
         this.playerWhite = playerWhite;
         this.currentPlayer = playerBlack; // Noir commence
 
+        grid = new Cell[SIZE][SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                grid[i][j] = new Cell(Color.EMPTY);
+            }
+        }
+        initBoard();
+    }
+    
+    /**
+     * Constructeur de copie du plateau.
+     *
+     * @param b un plateau b
+     */
+    
+    public Board(Board b){
+        this.playerBlack = b.playerBlack;
+        this.playerWhite = b.playerWhite;
+        this.currentPlayer = b.playerBlack; // Noir commence
         grid = new Cell[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -246,4 +281,38 @@ public class Board {
         }
         return true;
     }
+
+    public static int getSIZE() {
+        return SIZE;
+    }
+
+    public Cell[][] getGrid() {
+        return grid;
+    }
+
+    public Joueur getPlayerBlack() {
+        return playerBlack;
+    }
+
+    public Joueur getPlayerWhite() {
+        return playerWhite;
+    }
+
+    public void setGrid(Cell[][] grid) {
+        this.grid = grid;
+    }
+
+    public void setPlayerBlack(Joueur playerBlack) {
+        this.playerBlack = playerBlack;
+    }
+
+    public void setPlayerWhite(Joueur playerWhite) {
+        this.playerWhite = playerWhite;
+    }
+
+    public void setCurrentPlayer(Joueur currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+    
+    
 }
