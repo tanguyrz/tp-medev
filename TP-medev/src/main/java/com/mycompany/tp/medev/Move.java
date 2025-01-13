@@ -11,7 +11,7 @@ public class Move {
  */
 
     private int row;        // index de ligne (1-8)
-    private String col;        // lettre de colonne (a-h)
+    private int col;        // lettre de colonne (a-h)
     private Joueur player;  // joueur qui joue ce coup
 
     /**
@@ -20,7 +20,7 @@ public class Move {
      * @param col    String lettre de colonne (a-h)
      * @param player joueur qui joue ce coup
      */
-    public Move(int row, String col, Joueur player) {
+    public Move(int row, int col, Joueur player) {
         this.row = row;
         this.col = col;
         this.player = player;
@@ -30,7 +30,7 @@ public class Move {
         return row;
     }
 
-    public String getCol() {
+    public int getCol() {
         return col;
     }
 
@@ -38,7 +38,7 @@ public class Move {
         this.row = row;
     }
 
-    public void setCol(String col) {
+    public void setCol(int col) {
         this.col = col;
     }
 
