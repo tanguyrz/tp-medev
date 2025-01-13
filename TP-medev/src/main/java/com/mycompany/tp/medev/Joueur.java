@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.tp.medev;
+import java.util.Random;
 
 /**
  *
@@ -13,12 +10,29 @@ public class Joueur {
     private Color color;
 
     /**
+     * Constructeur par defaut
+     */
+    public Joueur(){
+        
+        this.name="Jack";
+
+        Random random = new Random();
+        int chance = random.nextInt(2);
+        if (chance == 0) {
+            this.color = "Blanche";
+        } 
+        else {
+            this.color = "Noir";
+        }
+    }
+    
+    /**
      * Constructeur.
      *
      * @param name  nom du joueur
      * @param color couleur du joueur (BLACK ou WHITE)
      */
-    public Player(String name, Color color) {
+    public Joueur(String name, Color color) {
         this.name = name;
         this.color = color;
     }
