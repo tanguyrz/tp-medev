@@ -6,7 +6,7 @@ import java.util.Random;
  */
 public class Color {
     
-    private boolean isWhite;
+    private Boolean isWhite;
 
     /**
     *Constructeur par défaut : initialise la couleur comme blanche avec une chance sur deux

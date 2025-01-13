@@ -16,23 +16,23 @@ public class Cell {
     private Color content;
 
     /**
-     * Constructeur par défaut
+     * Constructeur par défaut, pour avoir la case empty
      */
     public Cell() {
-        this.content = new Color();
+        this.content = null;
     }
 
     /**
      * Constructeur de copie.
-     * @param color la couleur du pion dans la case 
+     * @param color la couleur du pion dans la case, forcément une couleur
      */
     public Cell(Color color) {
         this.content = color;
     }
 
     /**
-     * Retourne la couleur de la cellule.
-     * @return la couleur de la cellule
+     * Retourne le contenu de la cellule, donc null ou une couleur
+     * @return le contenu de la cellule, donc null ou une couleur
      */
     public Color getContent() {
         return content;
