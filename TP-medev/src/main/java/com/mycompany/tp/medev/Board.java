@@ -15,6 +15,8 @@ public class Board {
     private Joueur playerWhite;
     private Joueur currentPlayer;
     
+    private Color color ;
+    
     /**
      * Constructeur par défaut du plateau.
      */
@@ -25,7 +27,7 @@ public class Board {
         grid = new Cell[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                grid[i][j] = new Cell(Color.EMPTY);
+                grid[i][j] = new Cell();
             }
         }
         initBoard();
@@ -45,7 +47,7 @@ public class Board {
         grid = new Cell[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                grid[i][j] = new Cell(Color.EMPTY);
+                grid[i][j] = new Cell();
             }
         }
         initBoard();
@@ -64,7 +66,7 @@ public class Board {
         grid = new Cell[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                grid[i][j] = new Cell(Color.EMPTY);
+                grid[i][j] = new Cell();
             }
         }
         initBoard();
@@ -79,13 +81,15 @@ public class Board {
         // On s'aligne sur la convention (0-based) :
         
         // D4 (row=3, col=3) => Blanc
-        grid[3][3].setContent(Color.WHITE);
+        Color c1 = new Color(false);
+        Color c2 = new Color(true);
+        grid[3][3].setContent(c1);
         // E4 (row=3, col=4) => Noir
-        grid[3][4].setContent(Color.BLACK);
+        grid[3][4].setContent(c1); 
         // D5 (row=4, col=3) => Noir
-        grid[4][3].setContent(Color.BLACK);
+        grid[4][3].setContent(c1);
         // E5 (row=4, col=4) => Blanc
-        grid[4][4].setContent(Color.WHITE);
+        grid[4][4].setContent(c2);
     }
 
     /**
@@ -97,17 +101,16 @@ public class Board {
             System.out.print((i+1) + " ");
             for (int j = 0; j < SIZE; j++) {
                 Color c = grid[i][j].getContent();
-                char symbol;
-                switch (c) {
-                    case BLACK:
-                        symbol = 'N';
-                        break;
-                    case WHITE:
-                        symbol = 'B';
-                        break;
-                    default:
-                        symbol = '.';
+                char symbol = 0;
+                if (color.isWhite()==false){
+                    symbol = 'N';
+                    break;
                 }
+                else if (color.isWhite() == true){
+                    symbol = 'B';
+                    break;
+                }
+                
                 System.out.print(" " + symbol + " ");
             }
             System.out.println(" " + (i+1));
@@ -136,11 +139,13 @@ public class Board {
 
     /**
      * Vérifie qu'un coup est valide (case vide + capture au moins un pion).
+     * @param move le mouvement du pion
+     * @return si le mouvement du pion est valide ou non
      */
     public boolean isValidMove(Move move) {
         int row = move.getRow();
         int col = move.getCol();
-        if (!isInBounds(row, col) || grid[row][col].getContent() != Color.EMPTY) {
+        if (!isInBounds(row, col) || grid[row][col].getContent() != null) {
             return false;
         }
         // Vérifier si le coup capture au moins un pion
@@ -193,7 +198,7 @@ public class Board {
         int row = move.getRow() + dr;
         int col = move.getCol() + dc;
         // Avancer tant qu'on est dans les limites et qu'on trouve des pions adverses
-        while (isInBounds(row, col) && grid[row][col].getContent() != Color.EMPTY 
+        while (isInBounds(row, col) && grid[row][col].getContent() != null 
                 && grid[row][col].getContent() != myColor) {
             lineCaptures.add(new int[] {row, col});
             row += dr;
@@ -264,7 +269,7 @@ public class Board {
         boolean hasEmpty = false;
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                if (grid[i][j].getContent() == Color.EMPTY) {
+                if (grid[i][j].getContent() == null) {
                     hasEmpty = true;
                     break;
                 }
